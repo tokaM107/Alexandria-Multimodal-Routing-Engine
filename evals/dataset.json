@@ -1,13 +1,13 @@
 [
     {
-        "input": "ازاي اروح فتح الله ستانلي فأسرع وقت وبأقل تكاليف",
+        "input": "ازاي اروح فتح الله ستانلي فأسرع وقت وبأقل تكاليف 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "فتح الله ستانلي"
                     }
@@ -17,8 +17,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -30,7 +30,7 @@
         }
     },
     {
-        "input": "لو عايز اروح قسم سيدي جابر ايه المواصلات المتاحة ليا اركبها وتكون مواصلة واحدة بس",
+        "input": "لو عايز اروح قسم سيدي جابر ايه المواصلات المتاحة ليا اركبها وتكون مواصلة واحدة بس 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
@@ -46,8 +46,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 1,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -59,21 +59,21 @@
         }
     },
     {
-        "input": "انا رايح من محطة مصر لزيزينيا قلي ارخص طريقة",
+        "input": "انا رايح من محطة مصر لزيزينيا قلي ارخص طريقة 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "محطة مصر"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "زيزينيا"
                     }
@@ -81,10 +81,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "cost",
@@ -96,7 +96,7 @@
         }
     },
     {
-        "input": "لو عايز اروح من مكان لآخر ايه افضل طريقة",
+        "input": "لو عايز اروح من مكان لآخر ايه افضل طريقة 31.191377411119817, 29.919049014808774",
         "category": "ambiguity handling",
         "expected_behavior": {
             "should_call_tool": false,
@@ -105,14 +105,14 @@
         }
     },
     {
-        "input": "ازاى اقدر اوصل لسيتي سنتر وانا مروحتوش قبل كده وايه احسن طريق اقدر ارجع بيه",
+        "input": "ازاى اقدر اوصل لسيتي سنتر وانا مروحتوش قبل كده وايه احسن طريق اقدر ارجع بيه 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "سيتي سنتر"
                     }
@@ -122,8 +122,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -133,8 +133,8 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$destination.lat",
-                        "start_lon": "$destination.lon",
+                        "start_lat": "$end.lat",
+                        "start_lon": "$end.lon",
                         "end_lat": "$current_location.lat",
                         "end_lon": "$current_location.lon",
                         "max_transfers": 2,
@@ -148,7 +148,7 @@
         }
     },
     {
-        "input": "اسرع طريقه اقدر اروح بيها كلية حاسبات",
+        "input": "اسرع طريقه اقدر اروح بيها كلية حاسبات 31.191377411119817, 29.919049014808774",
         "category": "ambiguity handling",
         "expected_behavior": {
             "should_call_tool": false,
@@ -157,14 +157,14 @@
         }
     },
     {
-        "input": "لو انا رايح مناسبة وعايز اجيب حلويات من شهد الملكة ايه احسن طريقة اقدر اروح بيها وانا ساكن في محرم بك والمناسبة هتبقي في الحضرة",
+        "input": "لو انا رايح مناسبة وعايز اجيب حلويات من شهد الملكة ايه احسن طريقة اقدر اروح بيها وانا ساكن في محرم بك والمناسبة هتبقي في الحضرة 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "محرم بك"
                     }
@@ -178,7 +178,7 @@
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "الحضرة"
                     }
@@ -186,8 +186,8 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
                         "end_lat": "$sweets_stop.lat",
                         "end_lon": "$sweets_stop.lon",
                         "max_transfers": 2,
@@ -201,8 +201,8 @@
                     "args": {
                         "start_lat": "$sweets_stop.lat",
                         "start_lon": "$sweets_stop.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -214,21 +214,21 @@
         }
     },
     {
-        "input": " ايه احسن طريقة اعرف اوصل بيها من عند هندسة لحد المندرة وادفع قليل",
+        "input": " ايه احسن طريقة اعرف اوصل بيها من عند هندسة لحد المندرة وادفع قليل 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "هندسة"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "المندرة"
                     }
@@ -236,10 +236,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "cost",
@@ -251,7 +251,7 @@
         }
     },
     {
-        "input": "ايه هي أحسن طرق فاضية دلوقتي و المواصلات فيها شغالة مش واقفة ",
+        "input": "ايه هي أحسن طرق فاضية دلوقتي و المواصلات فيها شغالة مش واقفة 31.191377411119817, 29.919049014808774",
         "category": "ambiguity handling",
         "expected_behavior": {
             "should_call_tool": false,
@@ -260,14 +260,14 @@
         }
     },
     {
-        "input": "ايه المواصلات المتاحة من محطة مصر ",
+        "input": "ايه المواصلات المتاحة من محطة مصر 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "محطة مصر"
                     }
@@ -275,8 +275,8 @@
                 {
                     "name": "db_tools",
                     "args": {
-                        "lat": "$origin.lat",
-                        "lon": "$origin.lon",
+                        "lat": "$start.lat",
+                        "lon": "$start.lon",
                         "radius_m": 1000
                     }
                 }
@@ -285,7 +285,7 @@
         }
     },
     {
-        "input": "ايه نوعية الحوادث البتحصل علي طريق البحر ",
+        "input": "ايه نوعية الحوادث البتحصل علي طريق البحر 31.191377411119817, 29.919049014808774",
         "category": "ambiguity handling",
         "expected_behavior": {
             "should_call_tool": false,
@@ -294,21 +294,21 @@
         }
     },
     {
-        "input": "قارن بين المحمودية وابو قير من حيث الوقت و السعر عشان الفلوس اللي معايا يادوب لو هروح من مصطفي كامل لفيكتوريا",
+        "input": "قارن بين المحمودية وابو قير من حيث الوقت و السعر عشان الفلوس اللي معايا يادوب لو هروح من مصطفي كامل لفيكتوريا 31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "مصطفي كامل"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "فيكتوريا"
                     }
@@ -316,10 +316,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "cost",
@@ -337,10 +337,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "cost",
@@ -360,7 +360,7 @@
         }
     },
     {
-        "input": "هل في مشاريع محموديه دلوقتي في موقف شارع 30",
+        "input": "هل في مشاريع محموديه دلوقتي في موقف شارع 3031.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
@@ -386,21 +386,21 @@
         }
     },
     {
-        "input": "ايه المواصلات المتاحة من العوايد للديب مول",
+        "input": "ايه المواصلات المتاحة من العوايد للديب مول31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "العوايد"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "الديب مول"
                     }
@@ -408,10 +408,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -423,14 +423,14 @@
         }
     },
     {
-        "input": "اروح ميدان الساعة ازاي في مواصله لهناك اصلا من مكاني ولا محتاج كذا مواصله",
+        "input": "اروح ميدان الساعة ازاي في مواصله لهناك اصلا من مكاني ولا محتاج كذا مواصله31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "ميدان الساعة"
                     }
@@ -440,8 +440,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -453,14 +453,14 @@
         }
     },
     {
-        "input": "انهاردة هروح انطونيادس هل فى مواصلات متوفرة ولا لا انهارده علشان احدد انزل بدرى ولا انزل فى معادي عادى",
+        "input": "انهاردة هروح انطونيادس هل فى مواصلات متوفرة ولا لا انهارده علشان احدد انزل بدرى ولا انزل فى معادي عادى31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "انطونيادس"
                     }
@@ -470,8 +470,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "time",
@@ -483,7 +483,7 @@
         }
     },
     {
-        "input": " اوصل ازاي لبنزينة رشدي من غير م انزل و اطلع كتير ",
+        "input": " اوصل ازاي لبنزينة رشدي من غير م انزل و اطلع كتير 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
@@ -499,8 +499,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 1,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -512,7 +512,7 @@
         }
     },
     {
-        "input": "هل فيه مواصلات حاليا ف سيدي جابر  ",
+        "input": "هل فيه مواصلات حاليا ف سيدي جابر  31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
@@ -538,7 +538,7 @@
         }
     },
     {
-        "input": "ايه هو متوسط سعر المواصلات ال هركبها لو هروح لحد جامع يحيي",
+        "input": "ايه هو متوسط سعر المواصلات ال هركبها لو هروح لحد جامع يحيي31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
@@ -554,8 +554,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "cost",
@@ -567,7 +567,7 @@
         }
     },
     {
-        "input": " هل في مواصلات في محطة مصر بدل ما اطلب اوبر？",
+        "input": " هل في مواصلات في محطة مصر بدل ما اطلب اوبر？ 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
@@ -593,7 +593,7 @@
         }
     },
     {
-        "input": " السكه زحمه ولا لا لو همشي من شارع ابو قير وهل فيه مواصلات ولا لا لو هروح محطة مصر",
+        "input": " السكه زحمه ولا لا لو همشي من شارع ابو قير وهل فيه مواصلات ولا لا لو هروح محطة مصر 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
@@ -625,21 +625,21 @@
         }
     },
     {
-        "input": "انا دلوقتي في باب شرق وهركب مشروع ابو سلمان وهنزل عند علي ابن ابي طالب ، المشروع هيعدي علي كوبري الابراهيمية؟",
+        "input": "انا دلوقتي في باب شرق وهركب مشروع ابو سلمان وهنزل عند علي ابن ابي طالب ، المشروع هيعدي علي كوبري الابراهيمية؟ 31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "باب شرق"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "علي ابن ابي طالب"
                     }
@@ -647,10 +647,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -670,7 +670,7 @@
         }
     },
     {
-        "input": "ايه اكتر طريق فاضي ممكن أركب منه يعني أبو قير ولا بحر الزحمة فين لو كده ممكن امشي الحتة ديه واركب من بعدها",
+        "input": "ايه اكتر طريق فاضي ممكن أركب منه يعني أبو قير ولا بحر الزحمة فين لو كده ممكن امشي الحتة ديه واركب من بعدها 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
@@ -692,21 +692,21 @@
         }
     },
     {
-        "input": "قولي اي علامة مميزة في الطريق من باب شرق لحد علي ابن ابي طالب عشان اعرف اني قربت من المكان اللي هنزل فيه",
+        "input": "قولي اي علامة مميزة في الطريق من باب شرق لحد علي ابن ابي طالب عشان اعرف اني قربت من المكان اللي هنزل فيه 31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "باب شرق"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "علي ابن ابي طالب"
                     }
@@ -714,10 +714,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "balanced",
@@ -729,7 +729,7 @@
         }
     },
     {
-        "input": "أي أكثر وسيله ترشيحها لمشواري لو عاوز أروح مستشفي وينجت ف أقصر وقت ممكن إزاي",
+        "input": "أي أكثر وسيله ترشيحها لمشواري لو عاوز أروح مستشفي وينجت ف أقصر وقت ممكن إزاي 31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": true,
@@ -745,8 +745,8 @@
                     "args": {
                         "start_lat": "$current_location.lat",
                         "start_lon": "$current_location.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "time",
@@ -758,7 +758,7 @@
         }
     },
     {
-        "input": "قولي معلومات عن the walk وانا مروحتهوش قبل كده",
+        "input": "قولي معلومات عن the walk وانا مروحتهوش قبل كده 31.191377411119817, 29.919049014808774",
         "category": "response quality",
         "expected_behavior": {
             "should_call_tool": false,
@@ -767,14 +767,14 @@
         }
     },
     {
-        "input": " انا راكب مشروع المندرة بحر دلوقتي وعايز اوصل عند بوابة نادي سبورتنج ممكن انزل ف نفق سبورتنج وامشيها؟ ممكن يكون اوفر وقت لو العربية كملت ولفت ؟",
+        "input": " انا راكب مشروع المندرة بحر دلوقتي وعايز اوصل عند بوابة نادي سبورتنج ممكن انزل ف نفق سبورتنج وامشيها؟ ممكن يكون اوفر وقت لو العربية كملت ولفت ؟ 31.191377411119817, 29.919049014808774",
         "category": "tool calling",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "بوابة نادي سبورتنج"
                     }
@@ -782,10 +782,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 2500,
                         "priority": "time",
@@ -805,14 +805,14 @@
         }
     },
     {
-        "input": "اروح ازاي  من شارع ابو قير لزيزينيا وانا معايا شنطة تقيلة ومش عايز امشي كتير",
+        "input": "اروح ازاي  من شارع ابو قير لزيزينيا وانا معايا شنطة تقيلة ومش عايز امشي كتير31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "زيزينيا"
                     }
@@ -820,10 +820,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1000,
                         "priority": "balanced",
@@ -835,21 +835,21 @@
         }
     },
     {
-        "input": "ازاي اروح من زعربانة للسكة الحديد من غير ما اركب توناية",
+        "input": "ازاي اروح من زعربانة للسكة الحديد من غير ما اركب توناية 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "السكة الحديد"
                     }
                 },
                 {
                     "name": "geocode_location",
-                    "save_as": "origin",
+                    "save_as": "start",
                     "args": {
                         "place_name": "زعربانة"
                     }
@@ -857,10 +857,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "balanced",
@@ -879,14 +879,14 @@
         }
     },
     {
-        "input": "ازاي اروح سموحة واعدي من شارع ابو قير بس من غير ما ادخل من مصطفي كامل ",
+        "input": "ازاي اروح سموحة واعدي من شارع ابو قير بس من غير ما ادخل من مصطفي كامل 31.191377411119817, 29.919049014808774",
         "category": "correct args",
         "expected_behavior": {
             "should_call_tool": true,
             "expected_tools": [
                 {
                     "name": "geocode_location",
-                    "save_as": "destination",
+                    "save_as": "end",
                     "args": {
                         "place_name": "سموحة"
                     }
@@ -894,10 +894,10 @@
                 {
                     "name": "get_routes",
                     "args": {
-                        "start_lat": "$origin.lat",
-                        "start_lon": "$origin.lon",
-                        "end_lat": "$destination.lat",
-                        "end_lon": "$destination.lon",
+                        "start_lat": "$start.lat",
+                        "start_lon": "$start.lon",
+                        "end_lat": "$end.lat",
+                        "end_lon": "$end.lon",
                         "max_transfers": 2,
                         "walking_cutoff": 1500,
                         "priority": "balanced",
