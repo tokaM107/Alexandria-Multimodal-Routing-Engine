@@ -1,4 +1,4 @@
-# Al-Osta AI Agent
+# Al-Osta AI Agent(graduation project)
 
 Personalized trip planning in multi-modal transport networks for Alexandria.
 
