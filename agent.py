@@ -44,16 +44,38 @@ class AlOstaAgent:
     def process_query(self, user_query):
         """Plan with an LLM, execute in Python, then synthesize with a smaller model."""
 
+        return self.process_query_with_trace(user_query)["final_response"]
+
+    def process_query_with_trace(self, user_query):
+        """Run one turn and return a structured trace for evaluation."""
+
         self.memory.add_user_message(user_query)
+        current_turn = self.memory.current_turn
+
+        trace = {
+            "user_query": user_query,
+            "turn": current_turn,
+            "planner_response": None,
+            "planner_output": [],
+            "tool_calls": [],
+            "tool_results": [],
+            "final_response": None,
+            "abort_message": None,
+            "token_usage": {},
+        }
 
         plan_context = self._build_planner_context(user_query)
         print("\n[Planner] starting")
         plan_response = self.planner_llm.generate(plan_context)
         print(f"[Planner] response: {plan_response}")
+        trace["planner_response"] = plan_response
+        trace["token_usage"]["planner"] = self.planner_llm.last_usage or {}
         if not plan_response:
-            return "عذرا، في مشكلة في الاتصال حاليا."
+            trace["final_response"] = "عذرا، في مشكلة في الاتصال حاليا."
+            return trace
 
         plan = self._parse_plan(plan_response)
+        trace["planner_output"] = plan
 
         print(f"[Executor] running {len(plan)} step(s)")
         self.trip_state.last_intent = self.trip_state.infer_intent(plan)
@@ -61,7 +83,16 @@ class AlOstaAgent:
         abort_message = next((item.get("abort_message") for item in tool_results if isinstance(item, dict) and item.get("abort_message")), None)
         if abort_message:
             self.memory.add_assistant_message(abort_message)
-            return abort_message
+            trace["tool_results"] = tool_results
+            trace["tool_calls"] = [
+                call for call in self.tool_log.get_recent_tool_calls()
+                if call.get("turn") == current_turn
+            ]
+            trace["abort_message"] = abort_message
+            trace["final_response"] = abort_message
+            trace["token_usage"]["synthesizer"] = {}
+            trace["token_usage"]["total_tokens"] = self._sum_usage_tokens(trace["token_usage"])
+            return trace
         if tool_results:
             self._last_tool_output = tool_results
 
@@ -71,11 +102,31 @@ class AlOstaAgent:
         print("[Synthesizer] starting")
         final_answer = self.synthesizer_slm.generate(synth_context)
         print(f"[Synthesizer] response: {final_answer}")
+        trace["token_usage"]["synthesizer"] = self.synthesizer_slm.last_usage or {}
         if not final_answer:
-            return "عذرا، حصلت مشكلة في توليد الرد."
+            final_answer = "عذرا، حصلت مشكلة في توليد الرد."
 
         self.memory.add_assistant_message(final_answer)
-        return final_answer
+        trace["tool_results"] = tool_results
+        trace["tool_calls"] = [
+            call for call in self.tool_log.get_recent_tool_calls()
+            if call.get("turn") == current_turn
+        ]
+        trace["final_response"] = final_answer
+        trace["token_usage"]["total_tokens"] = self._sum_usage_tokens(trace["token_usage"])
+        return trace
+
+    def _sum_usage_tokens(self, token_usage):
+        total_tokens = 0
+        for usage in token_usage.values():
+            if not isinstance(usage, dict):
+                continue
+            for key in ("total_token_count", "total_tokens"):
+                value = usage.get(key)
+                if isinstance(value, int):
+                    total_tokens += value
+                    break
+        return total_tokens
 
     def _build_planner_context(self, user_query):
         planner_state = {
@@ -408,6 +459,15 @@ class AlOstaAgent:
             place_name = args.get("place_name")
             if not isinstance(place_name, str) or not place_name.strip():
                 return "Geocoding needs a valid place_name, but the planner reference was unresolved."
+
+            for coord_key in ("user_lat", "user_lng"):
+                coord_value = args.get(coord_key)
+                if coord_value is not None and not isinstance(coord_value, (int, float)):
+                    return f"Geocoding optional field {coord_key} must be numeric when provided."
+
+            bias = args.get("bias")
+            if bias is not None and not isinstance(bias, bool):
+                return "Geocoding optional field bias must be a boolean when provided."
             return None
 
         if tool_name == "get_routes":
@@ -432,7 +492,12 @@ class AlOstaAgent:
 
     def _execute_tool(self, tool_name, args):
         if tool_name == "geocode_location":
-            return execute_geocode(args.get("place_name"))
+            return execute_geocode(
+                args.get("place_name"),
+                args.get("user_lat"),
+                args.get("user_lng"),
+                args.get("bias", True),
+            )
 
         if tool_name == "get_routes":
             return execute_route(
